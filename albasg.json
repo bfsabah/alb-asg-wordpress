@@ -1,0 +1,246 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description": "This cft creates VPC, ALB and ASG",
+    "Parameters": {
+        "WebServerKey": {
+            "Description": "This key will be used to SSH into EC2 instances",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        }
+    },
+
+    "Resources": {
+        "MyVPC" : {
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {	
+                "CidrBlock" : "10.0.0.0/16",
+                "InstanceTenancy" : "default",
+                "Tags" : [
+                    {
+                       "Key" : "Name",
+                        "Value": "Orchsky-VPC"
+                    }
+                ]
+            }
+        },
+        
+        "Public1": {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref": "MyVPC" },
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "0",
+                        {
+                            "Fn::GetAZs" : ""
+                        }
+                    ]
+                },
+                "CidrBlock" : "10.0.1.0/24",
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "DMZ1Public"                
+                    }
+                ]
+            }
+        },
+
+         
+        "Public2": {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref": "MyVPC" },
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "1",
+                        {
+                            "Fn::GetAZs" : ""
+                        }
+                    ]
+                },
+                "CidrBlock" : "10.0.2.0/24",
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "DMZ2Public"                
+                    }
+                ]
+            }
+        },
+
+         
+        "Private1": {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref": "MyVPC" },
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "0",
+                        {
+                            "Fn::GetAZs" : ""
+                        }
+                    ]
+                },
+                "CidrBlock" : "10.0.3.0/24",
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "AppLayer1Private"                
+                    }
+                ]
+            }
+        },
+          
+        "Private2": {
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "VpcId" : { "Ref": "MyVPC" },
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "1",
+                        {
+                            "Fn::GetAZs" : ""
+                        }
+                    ]
+                },
+                "CidrBlock" : "10.0.4.0/24",
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "AppLayer2Private"                
+                    }
+                ]
+            }
+        },
+
+        "InternetGateway" : {
+            "Type" : "AWS::EC2::InternetGateway",
+            "Tags" : [
+                {
+                    "Key" : "Name",
+                    "Value" : "Orchsky-IGW"
+                }
+            ]
+        },
+
+        "InternetGatewayAttachment" : {
+            "Type" : "AWS::EC2::VPCGatewayAttachment",
+            "Properties" : {
+                "InternetGatewayId" : {"Ref" : "InternetGateway"},
+                "VpcId" : {"Ref" : "MyVPC"}
+            }
+        },
+
+        "PublicRouteTable"  : {
+                "Type" : "AWS::EC2::RouteTable",
+                "Properties" : {
+                    "Tags" : [
+                        {
+                            "Key" : "Name",
+                            "Value" :  "Public-RT"
+                        }
+                     ],
+                    "VpcId" : {
+                        "Ref" : "MyVPC"
+                    }
+                }
+        },
+
+        "PublicRTRoute" : {
+            "Type" : "AWS::EC2::Route",
+            "DependsOn" : "InternetGatewayAttachment",
+            "Properties" : {
+               "RouteTableId" : { "Ref" : "PublicRouteTable" },
+               "DestinationCidrBlock" : "0.0.0.0/0",
+               "GatewayId" : { "Ref" : "InternetGateway" }
+            }
+        },
+
+        "PublicRTDMZ1publicAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "RouteTableId" : {"Ref": "PublicRouteTable" },
+                "SubnetId" : {"Ref" : "Public1"}
+              }
+        },
+
+        
+        "PublicRTDMZ2publicAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "RouteTableId" : {"Ref": "PublicRouteTable" },
+                "SubnetId" : {"Ref" : "Public2"}
+              }
+        },
+
+        "DMZNatGW" :{
+            "Type" : "AWS::EC2::NatGateway",
+            "Properties" : {
+                "AllocationId" : {"Fn::GetAtt":["NATEIP","AllocationId"] },
+                "ConnectivityType" : "public",
+                "SubnetId" : { "Ref" : "Public2"},
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : "Nat-Gateway"
+                    }
+                ]
+            }
+        },
+
+        "NATEIP" : {
+            "Type" : "AWS::EC2::EIP",
+            "DependsOn" : "InternetGatewayAttachment",
+            "Properties": {
+                "Domain" : "vpc",
+                "Tags" : [{
+                    "Key" : "Name",
+                    "Value" : "Elastic-IP"
+                }]
+            }
+        },
+
+        "PrivateRT"  : {
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" :  "Private-RT"
+                    }
+                 ],
+                "VpcId" : {
+                    "Ref" : "MyVPC"
+                }
+            }
+        },
+
+        "NATGatewayRoute" : {
+            "Type" : "AWS::EC2::Route",
+            "DependsOn" : "InternetGatewayAttachment",
+            "Properties" : {
+               "GatewayId" : { "Ref" : "DMZNatGW" },
+               "DestinationCidrBlock" : "0.0.0.0/0",
+               "RouteTableId" : { "Ref" : "PrivateRT" }
+            }
+        },
+
+        "AppLayer1PrivateSubnetAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "RouteTableId" : {"Ref": "PrivateRT" },
+                "SubnetId" : {"Ref" : "Private1"}
+              }
+        },
+
+        
+        "AppLayer2PrivateSubnetAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "RouteTableId" : {"Ref": "PrivateRT" },
+                "SubnetId" : {"Ref" : "Private2"}
+              }
+        }
+
+    }
+}

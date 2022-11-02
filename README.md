@@ -20,4 +20,23 @@ Tags: We give a name to our VPC.
 
 5- We create our InternetGateway ( Orchsky-IGW) and Attach it to our VPC with InternetGateway attachment.
 ![image](https://user-images.githubusercontent.com/113843658/199597693-aefd0b52-7a8b-4de1-97aa-14b91f04182d.png)
-6- 
+
+6- We create our RouteTable and PublicRTRoute (0.0.0.0/0 --> IGW)
+![image](https://user-images.githubusercontent.com/113843658/199599551-9b0a13db-dc7a-4c55-86ca-5144dd76f90c.png)
+
+7- We make our Public Subnet Associations.
+![image](https://user-images.githubusercontent.com/113843658/199599976-061b2f92-8b00-46a6-a61c-364621c64ede.png)
+
+8- We create Our NATGateway to provide an internet connection to our private subnets. (We allocate an ElasticIp for our NATGateway.
+
+![image](https://user-images.githubusercontent.com/113843658/199600230-6ba05428-0559-4b02-b81c-b9f391ee429c.png)
+
+9- We create our PrivateRT(RouteTable) and edit NatGateWayRoute.
+
+![image](https://user-images.githubusercontent.com/113843658/199600917-0b32a777-b01c-4588-a8c3-831187c729da.png)
+
+10- We associate our Private Subnets to PrivateRT.
+
+![image](https://user-images.githubusercontent.com/113843658/199601056-f345454c-ef34-4687-b2e1-496bd35c24fd.png)
+
+11- 

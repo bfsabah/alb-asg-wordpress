@@ -39,4 +39,12 @@ Tags: We give a name to our VPC.
 
 ![image](https://user-images.githubusercontent.com/113843658/199601056-f345454c-ef34-4687-b2e1-496bd35c24fd.png)
 
-11- 
+11- We create our Aplication Load Balancer Security Group (ALBASG) with inbound rules 0.0.0.0/0 --> 80 and 0.0.0.0/0 --> 443
+
+![image](https://user-images.githubusercontent.com/113843658/199602784-26beb271-b787-4921-8f04-e2a778fbaebc.png)
+
+12- We create our BastionHostSG ( with Inbound Rule 0.0.0.0/0 --> 22.
+![image](https://user-images.githubusercontent.com/113843658/199603190-718ade2c-5558-46f8-b50b-0d03cc2278fd.png)
+
+
+

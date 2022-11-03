@@ -89,11 +89,11 @@ Tags: We give a name to our VPC.
 
 ![image](https://user-images.githubusercontent.com/113843658/199827724-5b95fab7-b09b-4564-a319-803281abd6e4.png)
 
-24- We create BastionInstance with Ubuntu AMI Image Id.
+25- We create BastionInstance with Ubuntu AMI Image Id.
 
 ![image](https://user-images.githubusercontent.com/113843658/199830238-48662c0f-a9e4-47e1-a226-9d2574711229.png)
 
-25- We create AutoScaling Group Policy.
+26- We create AutoScaling Group Policy.
 
 ![image](https://user-images.githubusercontent.com/113843658/199830372-12de82b3-7f6d-474f-bdf0-764de440f4a4.png)
 

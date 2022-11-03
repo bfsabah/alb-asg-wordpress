@@ -600,7 +600,7 @@
                 "VpcId" : {"Ref": "VPC"}
             }
         }
-         "LaunchCongiguration": {
+         "LaunchConfiguration": {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
                 "AssociatePublicIpAddress" : false,
@@ -653,7 +653,7 @@
                 "DesiredCapacity" : "3",
                 "HealthCheckGracePeriod" : 300,
                 "HealthCheckType" : "ELB",
-                "LaunchConfigurationName" : {"Ref": "LaunchCongiguration"},
+                "LaunchConfigurationName" : {"Ref": "LaunchConfiguration"},
                 "MaxSize" : "5",
                 "MinSize" : "2",
                 "Tags" : [{"PropagateAtLaunch": true, "Key": "Name","Value": "ASG-wordpress"}],

@@ -604,7 +604,7 @@
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
                 "AssociatePublicIpAddress" : false,
-                "ImageId" : "ami-089a545a9ed9893b6",
+                "ImageId" : "ami-0caef02b518350c8b",
                 "InstanceMonitoring" : true,
                 "InstanceType" : "t2.micro",
                 "KeyName" : {"Ref": "WebServerKey"},

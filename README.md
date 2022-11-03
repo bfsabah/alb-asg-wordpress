@@ -74,10 +74,30 @@ Tags: We give a name to our VPC.
 ![image](https://user-images.githubusercontent.com/113843658/199812100-91c436f0-61ee-47a7-a216-d8a771c0d57d.png)
 
 21 - We create our Listener.
+
 ![image](https://user-images.githubusercontent.com/113843658/199812491-d82733c2-2a37-47cf-8326-e355f109fbb2.png)
 
 22- We create TargetGroup for Load Balancer.
+
 ![image](https://user-images.githubusercontent.com/113843658/199812810-45e53b26-c579-40d2-a649-f0bba4124852.png)
+
+23- We create LaunchConfiguration with Bash Script.
+
+![image](https://user-images.githubusercontent.com/113843658/199828199-80af56aa-6a64-458e-9dc0-44ac33edb135.png)
+
+24- We create AutoScalingGroup.
+
+![image](https://user-images.githubusercontent.com/113843658/199827724-5b95fab7-b09b-4564-a319-803281abd6e4.png)
+
+24- We create BastionInstance with Ubuntu AMI Image Id.
+
+![image](https://user-images.githubusercontent.com/113843658/199830238-48662c0f-a9e4-47e1-a226-9d2574711229.png)
+
+25- We create AutoScaling Group Policy.
+
+![image](https://user-images.githubusercontent.com/113843658/199830372-12de82b3-7f6d-474f-bdf0-764de440f4a4.png)
+
+
 
 
 

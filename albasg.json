@@ -600,5 +600,105 @@
                 "VpcId" : {"Ref": "VPC"}
             }
         }
+         "LaunchCongiguration": {
+            "Type" : "AWS::AutoScaling::LaunchConfiguration",
+            "Properties" : {
+                "AssociatePublicIpAddress" : false,
+                "ImageId" : "ami-089a545a9ed9893b6",
+                "InstanceMonitoring" : true,
+                "InstanceType" : "t2.micro",
+                "KeyName" : {"Ref": "WebServerKey"},
+                "PlacementTenancy" : "default",
+                "SecurityGroups" : [ {
+                    "Ref": "AppServerSG"
+                } ],
+                "UserData" : {
+                    "Fn::Base64": {
+                        "Fn::Join" : [
+                            "",
+                            [
+                            "#!/bin/bash\n",
+                            "yum update -y\n",
+                            "wget http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm\n",
+                            "yum localinstall -y mysql57-community-release-el7-8.noarch.rpm\n",
+                            "yum install -y mysql-community-server\n",
+                            "yum install -y httpd php php-mysqlnd git\n",
+                            "cd /var/www/html\n",
+                            "wget https://wordpress.org/wordpress-5.1.1.tar.gz\n",
+                            "tar -xzf wordpress-5.1.1.tar.gz\n",
+                            "cp wordpress/wp-config-sample.php wp-config.php\n",
+                            "echo '<?php phpinfo(); ?>' > /var/www/html/phpinfo.php\n",
+                            "echo 'Hello World' > /var/www/html/index.html\n",
+                            "groupadd www\n",
+                            "usermod -aG www ec2-user\n",
+                            "chown -R root:www /var/www\n",
+                            "service httpd start\n",
+                            "chkconfig httpd on\n",
+                            "service mysqld start\n",
+                            "chkconfig mysqld on\n",
+                            "service httpd restart\n",
+                            "service mysqld restart"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "AutoScalingGroup": {
+            "Type" : "AWS::AutoScaling::AutoScalingGroup",
+            "DependsOn": "ALB",
+            "Properties" : {
+                "AutoScalingGroupName" : "AppLayer-ASG",
+                "Cooldown" : "300",
+                "DesiredCapacity" : "3",
+                "HealthCheckGracePeriod" : 300,
+                "HealthCheckType" : "ELB",
+                "LaunchConfigurationName" : {"Ref": "LaunchCongiguration"},
+                "MaxSize" : "5",
+                "MinSize" : "2",
+                "Tags" : [{"PropagateAtLaunch": true, "Key": "Name","Value": "ASG-wordpress"}],
+                "TargetGroupARNs" : [{"Ref": "TargetGroup" }],
+                "VPCZoneIdentifier" : [ {"Ref": "Private1"},{"Ref": "Private2"}]
+                }
+            },
+            "BastionInstance": {
+                "Type" : "AWS::EC2::Instance",
+                "Properties" : {
+                    "ImageId" : "ami-089a545a9ed9893b6",
+                    "InstanceType" : "t2.micro",
+                    "KeyName" : {"Ref": "WebServerKey"},
+                    "NetworkInterfaces" : [ 
+                        {
+                            "GroupSet": [
+                                {"Ref":"BastionHostSG"}
+                            ],
+                            "AssociatePublicIpAddress": true,
+                            "DeviceIndex": "0",
+                            "DeleteOnTermination": true,
+                            "SubnetId": {"Ref":"Public1"}
+                        }
+                     ],
+                    "Tags" : [ 
+                        {
+                            "Key": "Name",
+                            "Value": "Bastion"
+                        }
+                     ]
+                    }
+                },
+                "ASGPolicy": {
+                    "Type" : "AWS::AutoScaling::ScalingPolicy",
+                    "Properties" : {
+                        "AdjustmentType" : "PercentChangeInCapacity",
+                        "AutoScalingGroupName" : {"Ref": "AutoScalingGroup"},
+                        "PolicyType" : "TargetTrackingScaling",
+                        "TargetTrackingConfiguration" : {
+                            "TargetValue": 40.0,
+                            "PredefinedMetricSpecification": {
+                                "PredefinedMetricType": "ASGAverageCPUUtilization"
+                            }
+                        }
+                        }
+                }
     }
 }

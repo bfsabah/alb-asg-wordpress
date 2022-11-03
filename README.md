@@ -1,8 +1,8 @@
 1- we insert our template format with version and description. Webserverkey is very important in this step.
 ![image](https://user-images.githubusercontent.com/113843658/199592347-3f9da593-9bd5-413c-a7bd-c50539817c10.png)
 
-
 2- We insert our Resources. We start with our VPC properties.
+
 Type: "AWS::EC2::VPC"
 Cidr-Block : We give our IP range for VPC.
 Tags: We give a name to our VPC.
@@ -25,6 +25,7 @@ Tags: We give a name to our VPC.
 ![image](https://user-images.githubusercontent.com/113843658/199599551-9b0a13db-dc7a-4c55-86ca-5144dd76f90c.png)
 
 7- We make our Public Subnet Associations.
+
 ![image](https://user-images.githubusercontent.com/113843658/199599976-061b2f92-8b00-46a6-a61c-364621c64ede.png)
 
 8- We create Our NATGateway to provide an internet connection to our private subnets. (We allocate an ElasticIp for our NATGateway.
@@ -68,6 +69,16 @@ Tags: We give a name to our VPC.
 
 19 - We create AppLayerPrivateSubnetNACL Egress 100,110,120 and 130 rules.
 ![image](https://user-images.githubusercontent.com/113843658/199804376-ad66193c-8484-42e4-8013-215f559b243b.png)
+
+20- We create ALB (Apllication Load Balancer) selecting Subnets (Public1 and Public2).
+![image](https://user-images.githubusercontent.com/113843658/199812100-91c436f0-61ee-47a7-a216-d8a771c0d57d.png)
+
+21 - We create our Listener.
+![image](https://user-images.githubusercontent.com/113843658/199812491-d82733c2-2a37-47cf-8326-e355f109fbb2.png)
+
+22- We create TargetGroup for Load Balancer.
+![image](https://user-images.githubusercontent.com/113843658/199812810-45e53b26-c579-40d2-a649-f0bba4124852.png)
+
 
 
 

@@ -410,5 +410,53 @@
                         "RuleNumber" : 130
                         }
              }
+         "AppLayerPrivateSubnetNACLIngress100": {
+                    "Type" : "AWS::EC2::NetworkAclEntry",
+                    "Properties" : {
+                        "CidrBlock" : "10.0.0.0/16",
+                        "Egress" : false,
+                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                        "PortRange" : {"From": "22", "To": "22"},
+                        "Protocol" : 6,
+                        "RuleAction" : "allow",
+                        "RuleNumber" : 100
+                        }
+                    },
+            "AppLayerPrivateSubnetNACLIngress110": {
+                    "Type" : "AWS::EC2::NetworkAclEntry",
+                    "Properties" : {
+                        "CidrBlock" : "10.0.0.0/16",
+                        "Egress" : false,
+                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                        "PortRange" : {"From": "80", "To": "80"},
+                        "Protocol" : 6,
+                        "RuleAction" : "allow",
+                        "RuleNumber" : 110
+                        }
+            },
+            "AppLayerPrivateSubnetNACLIngress120": {
+            "Type" : "AWS::EC2::NetworkAclEntry",
+            "Properties" : {
+                "CidrBlock" : "10.0.0.0/16",
+                "Egress" : false,
+                "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                "PortRange" : {"From": "443", "To": "443"},
+                "Protocol" : 6,
+                "RuleAction" : "allow",
+                "RuleNumber" : 120
+                }
+            },
+            "AppLayerPrivateSubnetNACLIngress130": {
+            "Type" : "AWS::EC2::NetworkAclEntry",
+            "Properties" : {
+                "CidrBlock" : "0.0.0.0/0",
+                "Egress" : false,
+                "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                "PortRange" : {"From": "1024", "To": "65535"},
+                "Protocol" : 6,
+                "RuleAction" : "allow",
+                "RuleNumber" : 130
+                }
+            }
     }
 } 

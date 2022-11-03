@@ -307,6 +307,34 @@
                             }
                         ]
                     }
+        },
+        "AppServerSG": {
+                    "Type" : "AWS::EC2::SecurityGroup",
+                    "Properties" : {
+                        "GroupDescription" : "AppLayer-SG",
+                        "GroupName" : "Wordpress-SG",
+                        "VpcId" : {"Ref": "VPC"},
+                        "SecurityGroupIngress" : [ 
+                            {
+                                "SourceSecurityGroupId" : {"Ref": "BastionHostSG"},
+                                "FromPort" : 22,
+                                "IpProtocol" : "tcp",
+                                "ToPort" : 22
+                            },
+                            {
+                                "SourceSecurityGroupId" :{"Ref": "ALBASG"},
+                                "FromPort" : 80,
+                                "IpProtocol" : "tcp",
+                                "ToPort" : 80
+                            }
+                         ],
+                        "Tags" : [ 
+                            {
+                                "Key": "Name",
+                                "Value": "AppLayer-SG"
+                            }
+                        ]
+                    }
         }
     }
 } 

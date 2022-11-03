@@ -335,6 +335,32 @@
                             }
                         ]
                     }
-        }
+        },
+        "DMZPublicNACL": {
+                    "Type" : "AWS::EC2::NetworkAcl",
+                    "Properties" : {
+                        "Tags" : [{
+                            "Key": "Name",
+                            "Value": "DMZ-Public-Subnet-NACL"
+                        } ],
+                        "VpcId" : {"Ref": "VPC"}
+                }
+            },
+        "DMZ1NACLAssociation": {
+                "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+                "DependsOn": "DMZPublicNACL",
+                "Properties" : {
+                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+                    "SubnetId" : {"Ref": "Public1"}
+                    }
+          },
+        "DMZ2NACLAssociation": {
+                "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+                "DependsOn": "DMZPublicNACL",
+                "Properties" : {
+                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+                    "SubnetId" : {"Ref": "Public2"}
+                    }
+         }
     }
 } 

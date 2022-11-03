@@ -664,7 +664,7 @@
             "BastionInstance": {
                 "Type" : "AWS::EC2::Instance",
                 "Properties" : {
-                    "ImageId" : "ami-089a545a9ed9893b6",
+                    "ImageId" : "ami-0caef02b518350c8b",
                     "InstanceType" : "t2.micro",
                     "KeyName" : {"Ref": "WebServerKey"},
                     "NetworkInterfaces" : [ 

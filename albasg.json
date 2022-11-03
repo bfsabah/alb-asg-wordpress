@@ -660,46 +660,6 @@
                 "TargetGroupARNs" : [{"Ref": "TargetGroup" }],
                 "VPCZoneIdentifier" : [ {"Ref": "Private1"},{"Ref": "Private2"}]
                 }
-            },
-            "BastionInstance": {
-                "Type" : "AWS::EC2::Instance",
-                "Properties" : {
-                    "ImageId" : "ami-0caef02b518350c8b",
-                    "InstanceType" : "t2.micro",
-                    "KeyName" : {"Ref": "WebServerKey"},
-                    "NetworkInterfaces" : [ 
-                        {
-                            "GroupSet": [
-                                {"Ref":"BastionHostSG"}
-                            ],
-                            "AssociatePublicIpAddress": true,
-                            "DeviceIndex": "0",
-                            "DeleteOnTermination": true,
-                            "SubnetId": {"Ref":"Public1"}
-                        }
-                     ],
-                    "Tags" : [ 
-                        {
-                            "Key": "Name",
-                            "Value": "Bastion"
-                        }
-                     ]
-                    }
-                },
-                "ASGPolicy": {
-                    "Type" : "AWS::AutoScaling::ScalingPolicy",
-                    "Properties" : {
-                        "AdjustmentType" : "PercentChangeInCapacity",
-                        "AutoScalingGroupName" : {"Ref": "AutoScalingGroup"},
-                        "PolicyType" : "TargetTrackingScaling",
-                        "TargetTrackingConfiguration" : {
-                            "TargetValue": 40.0,
-                            "PredefinedMetricSpecification": {
-                                "PredefinedMetricType": "ASGAverageCPUUtilization"
-                            }
-                        }
-                        }
-                    }
-
+        }
     }
 }

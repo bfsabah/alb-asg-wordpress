@@ -551,6 +551,54 @@
             "RuleAction" : "allow",
             "RuleNumber" : 130
             }
+        },
+     "ALB": {
+            "Type" : "AWS::ElasticLoadBalancingV2::LoadBalancer",
+            "Properties" : {
+                "IpAddressType" : "ipv4",
+                "Name" : "Application-Wordpress",
+                "Scheme" : "internet-facing",
+                "SecurityGroups" : [{"Ref": "ALBASG"}],
+                "Subnets" : [ {"Ref": "Public1"}, {"Ref": "Public2"} ],
+                "Type" : "application"
+                }
+            },
+        "Listener": {
+            "Type" : "AWS::ElasticLoadBalancingV2::Listener",
+            "Properties" : {
+                "DefaultActions" : [ 
+                    {
+                        "Type": "forward",
+                        "TargetGroupArn" : {"Ref": "TargetGroup"}
+                    }
+                 ],
+                "LoadBalancerArn" : {"Ref": "ALB"} ,
+                "Port" : 80,
+                "Protocol" : "HTTP"
+                }
+            },
+        "TargetGroup": {
+            "Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+            "Properties" : {
+                "HealthCheckEnabled" : true,
+                "HealthCheckIntervalSeconds" : 10,
+                "HealthCheckPath" : "/",
+                "HealthCheckPort" : "80",
+                "HealthCheckProtocol" : "HTTP",
+                "HealthyThresholdCount" : 2,
+                "Name" : "TargetGroup-Wordpress",
+                "Port" : 80,
+                "Protocol" : "HTTP",
+                "Tags" : [ 
+                    {
+                        "Key": "Name",
+                        "Value": "TargetGroup-Wordpress"
+                    }
+                 ],
+                "TargetType" : "instance",
+                "UnhealthyThresholdCount" : 2,
+                "VpcId" : {"Ref": "VPC"}
+            }
         }
     }
 }

@@ -599,8 +599,8 @@
                 "UnhealthyThresholdCount" : 2,
                 "VpcId" : {"Ref": "VPC"}
             }
-        }
-         "LaunchConfiguration": {
+        },
+          "LaunchCongiguration": {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
                 "AssociatePublicIpAddress" : false,
@@ -653,13 +653,53 @@
                 "DesiredCapacity" : "3",
                 "HealthCheckGracePeriod" : 300,
                 "HealthCheckType" : "ELB",
-                "LaunchConfigurationName" : {"Ref": "LaunchConfiguration"},
+                "LaunchConfigurationName" : {"Ref": "LaunchCongiguration"},
                 "MaxSize" : "5",
                 "MinSize" : "2",
                 "Tags" : [{"PropagateAtLaunch": true, "Key": "Name","Value": "ASG-wordpress"}],
                 "TargetGroupARNs" : [{"Ref": "TargetGroup" }],
                 "VPCZoneIdentifier" : [ {"Ref": "Private1"},{"Ref": "Private2"}]
                 }
-            }
+            },
+            "BastionInstance": {
+                "Type" : "AWS::EC2::Instance",
+                "Properties" : {
+                    "ImageId" : "ami-089a545a9ed9893b6",
+                    "InstanceType" : "t2.micro",
+                    "KeyName" : {"Ref": "WebServerKey"},
+                    "NetworkInterfaces" : [ 
+                        {
+                            "GroupSet": [
+                                {"Ref":"BastionHostSG"}
+                            ],
+                            "AssociatePublicIpAddress": true,
+                            "DeviceIndex": "0",
+                            "DeleteOnTermination": true,
+                            "SubnetId": {"Ref":"Public1"}
+                        }
+                     ],
+                    "Tags" : [ 
+                        {
+                            "Key": "Name",
+                            "Value": "Bastion"
+                        }
+                     ]
+                    }
+                },
+                "ASGPolicy": {
+                    "Type" : "AWS::AutoScaling::ScalingPolicy",
+                    "Properties" : {
+                        "AdjustmentType" : "PercentChangeInCapacity",
+                        "AutoScalingGroupName" : {"Ref": "AutoScalingGroup"},
+                        "PolicyType" : "TargetTrackingScaling",
+                        "TargetTrackingConfiguration" : {
+                            "TargetValue": 40.0,
+                            "PredefinedMetricSpecification": {
+                                "PredefinedMetricType": "ASGAverageCPUUtilization"
+                            }
+                        }
+                        }
+                    }
+
     }
 }

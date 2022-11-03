@@ -46,5 +46,18 @@ Tags: We give a name to our VPC.
 12- We create our BastionHostSG ( with Inbound Rule 0.0.0.0/0 --> 22.
 ![image](https://user-images.githubusercontent.com/113843658/199603190-718ade2c-5558-46f8-b50b-0d03cc2278fd.png)
 
+13- We create our AppServerSG (App Server Security Group) with 2 Ingress Rules (80,22)
+
+![image](https://user-images.githubusercontent.com/113843658/199652469-47172bdf-f0f3-4aba-b17f-5cd9d5e75e04.png)
+
+14- We create our DMZPublicNACL with Public Subnet Associations.
+![image](https://user-images.githubusercontent.com/113843658/199659649-04549fd7-ff28-4513-b308-8092603e9d66.png)
+
+15- We create our Ingress Rules 100, 110, 120, 130
+
+\![image](https://user-images.githubusercontent.com/113843658/199667313-5a106021-8c94-446f-9413-bb11e8e07c2f.png)
+
+
+
 
 

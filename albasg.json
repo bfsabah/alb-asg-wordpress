@@ -308,155 +308,80 @@
                         ]
                     }
         },
-        "AppServerSG": {
-                    "Type" : "AWS::EC2::SecurityGroup",
-                    "Properties" : {
-                        "GroupDescription" : "AppLayer-SG",
-                        "GroupName" : "Wordpress-SG",
-                        "VpcId" : {"Ref": "VPC"},
-                        "SecurityGroupIngress" : [ 
-                            {
-                                "SourceSecurityGroupId" : {"Ref": "BastionHostSG"},
-                                "FromPort" : 22,
-                                "IpProtocol" : "tcp",
-                                "ToPort" : 22
-                            },
-                            {
-                                "SourceSecurityGroupId" :{"Ref": "ALBASG"},
-                                "FromPort" : 80,
-                                "IpProtocol" : "tcp",
-                                "ToPort" : 80
-                            }
-                         ],
-                        "Tags" : [ 
-                            {
-                                "Key": "Name",
-                                "Value": "AppLayer-SG"
-                            }
-                        ]
-                    }
-        },
-        "DMZPublicNACL": {
-                    "Type" : "AWS::EC2::NetworkAcl",
-                    "Properties" : {
-                        "Tags" : [{
-                            "Key": "Name",
-                            "Value": "DMZ-Public-Subnet-NACL"
-                        } ],
-                        "VpcId" : {"Ref": "VPC"}
-                }
-            },
-        "DMZ1NACLAssociation": {
-                "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
-                "DependsOn": "DMZPublicNACL",
-                "Properties" : {
-                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                    "SubnetId" : {"Ref": "Public1"}
-                    }
-          },
-        "DMZ2NACLAssociation": {
-                "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
-                "DependsOn": "DMZPublicNACL",
-                "Properties" : {
-                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                    "SubnetId" : {"Ref": "Public2"}
-                    }
-         },
-        "DMZPublicSubnetNACLIngress100": {
-                "Type" : "AWS::EC2::NetworkAclEntry",
-                "Properties" : {
-                    "CidrBlock" : "0.0.0.0/0",
-                    "Egress" : false,
-                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                    "PortRange" : {"From": "22", "To": "22"},
-                    "Protocol" : 6,
-                    "RuleAction" : "allow",
-                    "RuleNumber" : 100
-                    }
-                },
-            "DMZPublicSubnetNACLIngress110": {
-                "Type" : "AWS::EC2::NetworkAclEntry",
-                "Properties" : {
-                    "CidrBlock" : "0.0.0.0/0",
-                    "Egress" : false,
-                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                    "PortRange" : {"From": "80", "To": "80"},
-                    "Protocol" : 6,
-                    "RuleAction" : "allow",
-                    "RuleNumber" : 110
-                    }
-                },
-            "DMZPublicSubnetNACLIngress120": {
-                "Type" : "AWS::EC2::NetworkAclEntry",
-                "Properties" : {
-                    "CidrBlock" : "0.0.0.0/0",
-                    "Egress" : false,
-                    "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                    "PortRange" : {"From": "443", "To": "443"},
-                    "Protocol" : 6,
-                    "RuleAction" : "allow",
-                    "RuleNumber" : 120
-                    }
-                },
-             "DMZPublicSubnetNACLIngress130": {
-                    "Type" : "AWS::EC2::NetworkAclEntry",
-                    "Properties" : {
-                        "CidrBlock" : "0.0.0.0/0",
-                        "Egress" : false,
-                        "NetworkAclId" : {"Ref": "DMZPublicNACL"},
-                        "PortRange" : {"From": "1024", "To": "65535"},
-                        "Protocol" : 6,
-                        "RuleAction" : "allow",
-                        "RuleNumber" : 130
-                        }
-             }
-         "AppLayerPrivateSubnetNACLIngress100": {
-                    "Type" : "AWS::EC2::NetworkAclEntry",
-                    "Properties" : {
-                        "CidrBlock" : "10.0.0.0/16",
-                        "Egress" : false,
-                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
-                        "PortRange" : {"From": "22", "To": "22"},
-                        "Protocol" : 6,
-                        "RuleAction" : "allow",
-                        "RuleNumber" : 100
-                        }
-                    },
-            "AppLayerPrivateSubnetNACLIngress110": {
-                    "Type" : "AWS::EC2::NetworkAclEntry",
-                    "Properties" : {
-                        "CidrBlock" : "10.0.0.0/16",
-                        "Egress" : false,
-                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
-                        "PortRange" : {"From": "80", "To": "80"},
-                        "Protocol" : 6,
-                        "RuleAction" : "allow",
-                        "RuleNumber" : 110
-                        }
-            },
-            "AppLayerPrivateSubnetNACLIngress120": {
-            "Type" : "AWS::EC2::NetworkAclEntry",
+    "DMZPublicNACL": {
+            "Type" : "AWS::EC2::NetworkAcl",
             "Properties" : {
-                "CidrBlock" : "10.0.0.0/16",
-                "Egress" : false,
-                "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
-                "PortRange" : {"From": "443", "To": "443"},
-                "Protocol" : 6,
-                "RuleAction" : "allow",
-                "RuleNumber" : 120
-                }
-            },
-            "AppLayerPrivateSubnetNACLIngress130": {
+                "Tags" : [{
+                    "Key": "Name",
+                    "Value": "DMZ-Public-Subnet-NACL"
+                } ],
+                "VpcId" : {"Ref": "VPC"}
+        }
+    },
+    "DMZ1NACLAssociation": {
+        "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+        "DependsOn": "DMZPublicNACL",
+        "Properties" : {
+            "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+            "SubnetId" : {"Ref": "Public1"}
+            }
+        },
+    "DMZ2NACLAssociation": {
+        "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+        "DependsOn": "DMZPublicNACL",
+        "Properties" : {
+            "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+            "SubnetId" : {"Ref": "Public2"}
+            }
+        },
+    "DMZPublicSubnetNACLIngress100": {
+        "Type" : "AWS::EC2::NetworkAclEntry",
+        "Properties" : {
+            "CidrBlock" : "0.0.0.0/0",
+            "Egress" : false,
+            "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+            "PortRange" : {"From": "22", "To": "22"},
+            "Protocol" : 6,
+            "RuleAction" : "allow",
+            "RuleNumber" : 100
+            }
+        },
+    "DMZPublicSubnetNACLIngress110": {
+        "Type" : "AWS::EC2::NetworkAclEntry",
+        "Properties" : {
+            "CidrBlock" : "0.0.0.0/0",
+            "Egress" : false,
+            "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+            "PortRange" : {"From": "80", "To": "80"},
+            "Protocol" : 6,
+            "RuleAction" : "allow",
+            "RuleNumber" : 110
+            }
+        },
+    "DMZPublicSubnetNACLIngress120": {
+        "Type" : "AWS::EC2::NetworkAclEntry",
+        "Properties" : {
+            "CidrBlock" : "0.0.0.0/0",
+            "Egress" : false,
+            "NetworkAclId" : {"Ref": "DMZPublicNACL"},
+            "PortRange" : {"From": "443", "To": "443"},
+            "Protocol" : 6,
+            "RuleAction" : "allow",
+            "RuleNumber" : 120
+            }
+        },
+        "DMZPublicSubnetNACLIngress130": {
             "Type" : "AWS::EC2::NetworkAclEntry",
             "Properties" : {
                 "CidrBlock" : "0.0.0.0/0",
                 "Egress" : false,
-                "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                "NetworkAclId" : {"Ref": "DMZPublicNACL"},
                 "PortRange" : {"From": "1024", "To": "65535"},
                 "Protocol" : 6,
                 "RuleAction" : "allow",
                 "RuleNumber" : 130
-                }
             }
+        }
+        
     }
 } 

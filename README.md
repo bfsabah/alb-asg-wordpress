@@ -55,7 +55,14 @@ Tags: We give a name to our VPC.
 
 15- We create our Ingress Rules 100, 110, 120, 130
 
-\![image](https://user-images.githubusercontent.com/113843658/199667313-5a106021-8c94-446f-9413-bb11e8e07c2f.png)
+![image](https://user-images.githubusercontent.com/113843658/199667313-5a106021-8c94-446f-9413-bb11e8e07c2f.png)
+
+16 - We create AppLayerPrivateSubnetNACLEgress 100,110,120,130 Rules.
+![image](https://user-images.githubusercontent.com/113843658/199774075-8975d2e1-2954-49d5-ab36-cf5719eab789.png)
+
+17- We created AppLayerPrivateNACL and we associate AppLayerPrivate1 and AppLAyerPrivate2 subnets.
+![image](https://user-images.githubusercontent.com/113843658/199777506-1bda74a7-fa17-458d-af70-e5d9ecd25e2b.png)
+
 
 
 

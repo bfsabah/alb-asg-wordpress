@@ -429,6 +429,32 @@
                         "RuleAction" : "allow",
                         "RuleNumber" : 130
                     }
+                },
+          "AppLayerPrivateNACL": {
+                    "Type" : "AWS::EC2::NetworkAcl",
+                    "Properties" : {
+                        "Tags" : [{
+                            "Key": "Name",
+                            "Value": "DMZ-Private-Subnet-NACL"
+                        } ],
+                        "VpcId" : {"Ref": "VPC"}
+                     }
+            },
+            "AppLayer1NACLAssociation": {
+                    "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+                    "DependsOn": "AppLayerPrivateNACL",
+                    "Properties" : {
+                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                        "SubnetId" : {"Ref": "Private1"}
+                        }
+             },
+             "AppLayer2NACLAssociation": {
+                    "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+                    "DependsOn": "AppLayerPrivateNACL",
+                    "Properties" : {
+                        "NetworkAclId" : {"Ref": "AppLayerPrivateNACL"},
+                        "SubnetId" : {"Ref": "Private2"}
+                        }
                 }
     }
 }
